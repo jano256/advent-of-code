@@ -26,12 +26,21 @@ def main():
     for char in alphanum_list:
         antennas = antenna_list[alphanum_list.index(char)]
         for combos in itertools.combinations(antennas, 2):
-            x1 = 2 * combos[0][0] - combos[1][0]
-            y1 = 2 * combos[0][1] - combos[1][1]
-            x2 = 2 * combos[1][0] - combos[0][0]
-            y2 = 2 * combos[1][1] - combos[0][1]
-            set_antinode(antinodes, x1, y1, sizex, sizey)
-            set_antinode(antinodes, x2, y2, sizex, sizey)
+            x_diff = combos[0][0] - combos[1][0]
+            y_diff = combos[0][1] - combos[1][1]
+
+            x = combos[0][0]
+            y = combos[0][1]
+            while set_antinode(antinodes, x, y, sizex, sizey):
+                x += x_diff
+                y += y_diff
+
+            x = combos[0][0]
+            y = combos[0][1]
+            while set_antinode(antinodes, x, y, sizex, sizey):
+                x -= x_diff
+                y -= y_diff
+            
 
     antinode_count = 0
     for line in antinodes:
