@@ -1,49 +1,76 @@
-import re
 x, y = 0, 1
-
 def main():
     dir = {'^': [0, -1], 'v': [0, 1], '<': [-1, 0], '>': [1, 0]}
     pos = [0, 0]
     grid = []
-    for line in open("test.txt", "r"):
-        grid.append([])
-        for char in line[:-1]:
-            grid[-1].append(char)
-    moves = grid[-1].copy()
-    grid.pop(-1)
-    grid.pop(-1)
+    grid_finish = False
+    moves = []
+
+    for line in open("test3.txt", "r"):
+        if line == '\n':
+                grid_finish = True
+                continue
+        if not grid_finish:
+            grid.append([])
+            for char in line[:-1]:
+                match char:
+                    case '#':
+                        grid[-1].extend(['#', '#'])
+                    case 'O':
+                        grid[-1].extend(['[', ']'])
+                    case '.':
+                        grid[-1].extend(['.', '.'])
+                    case '@':
+                        grid[-1].extend(['@', '.'])    
+        else:
+            moves += line[:-1]
+
 
     for line in grid:
         if line.count('@'):
-            pos[x] = line.index('@')
-            pos[y] = grid.index(line)
+            pos[x], pos[y] = line.index('@'), grid.index(line)
             grid[pos[y]][pos[x]] = '.'
 
+    print_grid(grid, pos)
+
     for m in moves:
-        target_x, target_y = pos[x] + dir[m][x], pos[y] + dir[m][y]
         print_grid(grid, pos)
-        print("move", dir[m])
-        print("pos", pos)
-        print("target", target_x, target_y)
+        input("enter...")
+        target_x, target_y = pos[x] + dir[m][x], pos[y] + dir[m][y]
         target = grid[target_y][target_x]
-        input("press enter")
         
-        if target == '#':
-            continue
-
-        if target == 'O':
-            if not try_push():
+        match target:
+            case '#':
                 continue
+            case '.':
+                pos[x], pos[y] = target_x, target_y
+            case '[' | ']':
+                move_x, move_y = target_x, target_y
+                while True:
+                    move_x, move_y = move_x + dir[m][x], move_y + dir[m][y]
+                    match grid[move_y][move_x]:
+                        case '.':
+                            grid[target_y][target_x], grid[move_y][move_x] = grid[move_y][move_x], grid[target_y][target_x]
+                            pos[x], pos[y] = target_x, target_y
+                            break
+                        case '#':
+                            break
 
-        pos[x] = target_x
-        pos[y] = target_y
-        
-def try_push():
-    return True
+    print_grid(grid, pos)
+
+    sum = 0
+    for line in range(len(grid)):
+        for point in range(len(grid[0])):
+            if grid[line][point] == 'O':
+                sum += 100 * line + point
+    print(sum)
+
+
+
 
 def print_grid(grid, pos):
-    for line in range(len(grid[0])):
-        for point in range(len(grid)):
+    for line in range(len(grid)):
+        for point in range(len(grid[0])):
             if line == pos[y] and point == pos[x]:
                 print('@', end='')
             else:
