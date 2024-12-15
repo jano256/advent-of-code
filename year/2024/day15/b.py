@@ -46,10 +46,11 @@ def main():
                 pos[x], pos[y] = target_x, target_y
             case '[' | ']':
                 move_x, move_y = target_x, target_y
-                while True:
+                for i in range(1,100):
                     move_x, move_y = move_x + dir[m][x], move_y + dir[m][y]
                     match grid[move_y][move_x]:
                         case '.':
+                            print(i)
                             grid[target_y][target_x], grid[move_y][move_x] = grid[move_y][move_x], grid[target_y][target_x]
                             pos[x], pos[y] = target_x, target_y
                             break
