@@ -31,5 +31,5 @@ main()
 '''
 zwei linien, die sich treffen
 a von 0/0 richung ziel, b von ziel richtung 0/0
-wenn die punkte der linien sich treffen, gibt es ein ergebnis
+wenn die punkte der linien sich treffen, ist es das ergebnis
 '''
