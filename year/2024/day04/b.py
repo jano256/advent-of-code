@@ -1,6 +1,3 @@
-import re
-from itertools import chain
-
 def main():
     wordgrid = []
     for line in open("input.txt", "r"):
